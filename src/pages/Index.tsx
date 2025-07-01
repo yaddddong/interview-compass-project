@@ -2,8 +2,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { FilterState, Interview } from '@/types/interview';
 import { mockInterviews } from '@/utils/mockData';
-import FilterSidebar from '@/components/FilterSidebar';
-import DifficultyChart from '@/components/DifficultyChart';
+import TopFilters from '@/components/TopFilters';
+import DifficultySlider from '@/components/DifficultySlider';
 import InterviewCard from '@/components/InterviewCard';
 import AIAnalysisModal from '@/components/AIAnalysisModal';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
@@ -113,100 +113,92 @@ const Index = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className={`flex gap-8 ${isMobile ? 'flex-col' : ''}`}>
-          {/* 左侧过滤栏 - 桌面端 */}
-          {!isMobile && (
-            <div className="w-80 flex-shrink-0">
-              <div className="sticky top-24">
-                <FilterSidebar 
-                  filters={filters} 
-                  onFiltersChange={setFilters}
-                  className="rounded-xl shadow-sm border"
-                />
-              </div>
-            </div>
-          )}
+        {/* 搜索栏 */}
+        <div className="bg-white rounded-xl p-6 shadow-sm border mb-6">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="搜索面试题、公司或岗位..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
 
-          {/* 主内容区 */}
-          <div className="flex-1 min-w-0">
-            {/* 搜索栏 */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border mb-6">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="搜索面试题、公司或岗位..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
+        {/* 筛选条件 - 桌面端显示在顶部 */}
+        {!isMobile && (
+          <div className="mb-6">
+            <TopFilters 
+              filters={filters} 
+              onFiltersChange={setFilters}
+            />
+          </div>
+        )}
 
-            {/* 难度分布图 */}
-            <div className="mb-6">
-              <DifficultyChart
-                interviews={filteredInterviews}
-                selectedDifficulty={filters.difficulty}
-                onDifficultySelect={handleDifficultySelect}
-              />
-            </div>
+        {/* 难度滑动轴 */}
+        <div className="mb-6">
+          <DifficultySlider
+            interviews={filteredInterviews}
+            selectedDifficulty={filters.difficulty}
+            onDifficultySelect={handleDifficultySelect}
+          />
+        </div>
 
-            {/* 结果统计 */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  面试题列表 ({filteredInterviews.length})
-                </h2>
-                {filteredInterviews.length > 0 && (
-                  <span className="text-sm text-gray-500">
-                    按热度排序
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* 面试题列表 */}
-            {filteredInterviews.length > 0 ? (
-              <div className="grid gap-4 md:gap-6">
-                {filteredInterviews.map((interview) => (
-                  <div key={interview.id} className="animate-fade-in">
-                    <InterviewCard
-                      interview={interview}
-                      onAIAnalysis={handleAIAnalysis}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-xl p-12 shadow-sm border text-center">
-                <div className="text-gray-400 mb-4">
-                  <Search className="w-12 h-12 mx-auto mb-4" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">暂无相关面试题</h3>
-                <p className="text-gray-600 mb-4">
-                  {searchTerm ? '请尝试其他搜索关键词' : '请调整筛选条件'}
-                </p>
-                <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setFilters({
-                      type: null,
-                      category: null,
-                      subcategory: null,
-                      companies: [],
-                      timeRange: null,
-                      difficulty: null
-                    });
-                  }}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                >
-                  清除筛选条件
-                </button>
-              </div>
+        {/* 结果统计 */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              面试题列表 ({filteredInterviews.length})
+            </h2>
+            {filteredInterviews.length > 0 && (
+              <span className="text-sm text-gray-500">
+                按热度排序
+              </span>
             )}
           </div>
         </div>
+
+        {/* 面试题列表 */}
+        {filteredInterviews.length > 0 ? (
+          <div className="grid gap-4 md:gap-6">
+            {filteredInterviews.map((interview) => (
+              <div key={interview.id} className="animate-fade-in">
+                <InterviewCard
+                  interview={interview}
+                  onAIAnalysis={handleAIAnalysis}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl p-12 shadow-sm border text-center">
+            <div className="text-gray-400 mb-4">
+              <Search className="w-12 h-12 mx-auto mb-4" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">暂无相关面试题</h3>
+            <p className="text-gray-600 mb-4">
+              {searchTerm ? '请尝试其他搜索关键词' : '请调整筛选条件'}
+            </p>
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setFilters({
+                  type: null,
+                  category: null,
+                  subcategory: null,
+                  companies: [],
+                  timeRange: null,
+                  difficulty: null
+                });
+              }}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            >
+              清除筛选条件
+            </button>
+          </div>
+        )}
       </div>
 
       {/* AI 解析模态框 */}
