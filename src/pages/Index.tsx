@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo } from 'react';
 import { FilterState, Interview } from '@/types/interview';
 import { mockInterviews } from '@/utils/mockData';
@@ -7,7 +8,7 @@ import InterviewCard from '@/components/InterviewCard';
 import AIAnalysisModal from '@/components/AIAnalysisModal';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Search, TrendingUp, Sparkles } from 'lucide-react';
+import { TrendingUp, Sparkles } from 'lucide-react';
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -20,21 +21,11 @@ const Index = () => {
     difficulty: null
   });
   
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
   const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
 
   const filteredInterviews = useMemo(() => {
     let result = mockInterviews;
-
-    // 搜索过滤
-    if (searchTerm.trim()) {
-      result = result.filter(interview => 
-        interview.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        interview.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        interview.subcategory.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
 
     // 类型过滤
     if (filters.type) {
@@ -76,7 +67,7 @@ const Index = () => {
     }
 
     return result;
-  }, [filters, searchTerm]);
+  }, [filters]);
 
   const handleAIAnalysis = (interview: Interview) => {
     setSelectedInterview(interview);
@@ -88,21 +79,21 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
-      {/* 增强的头部 */}
-      <header className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-gray-100/50 sticky top-0 z-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-purple-50/10">
+      {/* 精简头部 */}
+      <header className="bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-100/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <TrendingUp className="w-6 h-6 text-white" />
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-gray-800 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-lg font-bold bg-gradient-to-r from-gray-800 via-blue-600 to-purple-600 bg-clip-text text-transparent">
                   面经聚合
                 </h1>
                 <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <Sparkles className="w-3 h-3" />
+                  <Sparkles className="w-2.5 h-2.5" />
                   <span>智能面试题库</span>
                 </div>
               </div>
@@ -119,27 +110,10 @@ const Index = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 增强的搜索栏 */}
-        <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-gray-100/50 mb-8">
-          <div className="relative">
-            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="搜索面试题、公司或岗位..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 border border-gray-200/50 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300 transition-all duration-300 bg-white/50 backdrop-blur-sm text-lg placeholder-gray-400"
-            />
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-            </div>
-          </div>
-        </div>
-
-        {/* 筛选条件 - 桌面端显示在顶部 */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* 紧凑的筛选条件 - 桌面端显示在顶部 */}
         {!isMobile && (
-          <div className="mb-8">
+          <div className="mb-5">
             <TopFilters 
               filters={filters} 
               onFiltersChange={setFilters}
@@ -147,68 +121,71 @@ const Index = () => {
           </div>
         )}
 
-        {/* 难度滑动轴 */}
-        <div className="mb-8">
+        {/* 紧凑的难度滑动轴 */}
+        <div className="mb-6">
           <DifficultySlider
-            interviews={filteredInterviews}
+            interviews={mockInterviews}
             selectedDifficulty={filters.difficulty}
             onDifficultySelect={handleDifficultySelect}
           />
         </div>
 
-        {/* 增强的结果统计 */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <h2 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+        {/* 简洁的结果统计 */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
               面试题列表 ({filteredInterviews.length})
             </h2>
             {filteredInterviews.length > 0 && (
-              <span className="text-sm text-gray-500 bg-gray-100/50 px-3 py-1 rounded-full border border-gray-200/50">
+              <span className="text-xs text-gray-500 bg-gray-100/50 px-2 py-1 rounded-full border border-gray-200/50">
                 按热度排序
               </span>
             )}
           </div>
         </div>
 
-        {/* 面试题列表 */}
-        {filteredInterviews.length > 0 ? (
-          <div className="grid gap-6">
-            {filteredInterviews.map((interview) => (
-              <div key={interview.id} className="animate-fade-in">
-                <InterviewCard
-                  interview={interview}
-                  onAIAnalysis={handleAIAnalysis}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-16 shadow-lg border border-gray-100/50 text-center">
-            <div className="text-gray-400 mb-6">
-              <Search className="w-16 h-16 mx-auto mb-4" />
+        {/* 面试题列表 - 占据主要空间 */}
+        <div className="min-h-[70vh]">
+          {filteredInterviews.length > 0 ? (
+            <div className="grid gap-4">
+              {filteredInterviews.map((interview) => (
+                <div key={interview.id} className="animate-fade-in">
+                  <InterviewCard
+                    interview={interview}
+                    onAIAnalysis={handleAIAnalysis}
+                  />
+                </div>
+              ))}
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">暂无相关面试题</h3>
-            <p className="text-gray-600 mb-6 text-lg">
-              {searchTerm ? '请尝试其他搜索关键词' : '请调整筛选条件'}
-            </p>
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setFilters({
-                  type: null,
-                  category: null,
-                  subcategory: null,
-                  companies: [],
-                  timeRange: null,
-                  difficulty: null
-                });
-              }}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transform hover:scale-105"
-            >
-              清除筛选条件
-            </button>
-          </div>
-        )}
+          ) : (
+            <div className="bg-white/70 backdrop-blur-lg rounded-xl p-12 shadow-lg border border-gray-100/50 text-center">
+              <div className="text-gray-400 mb-4">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">暂无相关面试题</h3>
+              <p className="text-gray-600 mb-4">
+                请调整筛选条件
+              </p>
+              <button
+                onClick={() => {
+                  setFilters({
+                    type: null,
+                    category: null,
+                    subcategory: null,
+                    companies: [],
+                    timeRange: null,
+                    difficulty: null
+                  });
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 transform hover:scale-105"
+              >
+                清除筛选条件
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* AI 解析模态框 */}
