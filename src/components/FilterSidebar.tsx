@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { FilterState } from '@/types/interview';
-import { X, Search } from 'lucide-react';
+import { X, Search, Filter } from 'lucide-react';
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -25,11 +25,11 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
   );
 
   const timeRanges = [
-    { value: 'two_weeks', label: '最近两周' },
-    { value: 'one_month', label: '最近一个月' },
-    { value: 'half_year', label: '最近半年' },
-    { value: 'one_year', label: '最近一年' },
-    { value: 'two_years', label: '最近两年' }
+    { value: 'two_weeks', label: '2周' },
+    { value: 'one_month', label: '1月' },
+    { value: 'half_year', label: '半年' },
+    { value: 'one_year', label: '1年' },
+    { value: 'two_years', label: '2年' }
   ];
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
@@ -73,27 +73,32 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
     filters.companies.length > 0 || filters.timeRange;
 
   return (
-    <div className={`bg-white ${className}`}>
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-900">筛选条件</h2>
+    <div className={`bg-transparent ${className}`}>
+      <div className="p-4">
+        {/* 标题 */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-blue-500" />
+            <h2 className="text-base font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              筛选器
+            </h2>
+          </div>
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
-              className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+              className="text-xs text-blue-600 hover:text-blue-700 transition-colors px-2 py-1 rounded-md hover:bg-blue-50"
             >
-              清空全部
+              清空
             </button>
           )}
         </div>
 
-        {/* 已选标签 */}
+        {/* 已选标签 - 紧凑显示 */}
         {hasActiveFilters && (
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">已选条件</h3>
-            <div className="flex flex-wrap gap-2">
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-1">
               {filters.type && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
                   {filters.type === 'campus' ? '校招' : '社招'}
                   <X 
                     className="w-3 h-3 cursor-pointer hover:text-blue-900" 
@@ -102,7 +107,7 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                 </span>
               )}
               {filters.category && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs">
                   {filters.category}
                   <X 
                     className="w-3 h-3 cursor-pointer hover:text-green-900" 
@@ -111,7 +116,7 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                 </span>
               )}
               {filters.subcategory && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-xs">
                   {filters.subcategory}
                   <X 
                     className="w-3 h-3 cursor-pointer hover:text-purple-900" 
@@ -120,7 +125,7 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                 </span>
               )}
               {filters.companies.map(company => (
-                <span key={company} className="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm">
+                <span key={company} className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 rounded-md text-xs">
                   {company}
                   <X 
                     className="w-3 h-3 cursor-pointer hover:text-orange-900" 
@@ -129,7 +134,7 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                 </span>
               ))}
               {filters.timeRange && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-xs">
                   {timeRanges.find(t => t.value === filters.timeRange)?.label}
                   <X 
                     className="w-3 h-3 cursor-pointer hover:text-gray-900" 
@@ -141,16 +146,16 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* 类型筛选 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">类型</h3>
-            <div className="space-y-2">
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">类型</h3>
+            <div className="space-y-1">
               {[
                 { value: 'campus', label: '校招' },
                 { value: 'social', label: '社招' }
               ].map(type => (
-                <label key={type.value} className="flex items-center">
+                <label key={type.value} className="flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="type"
@@ -158,9 +163,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                     onChange={() => updateFilters({ 
                       type: filters.type === type.value ? null : type.value as 'campus' | 'social'
                     })}
-                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{type.label}</span>
+                  <span className="ml-2 text-xs text-gray-700">{type.label}</span>
                 </label>
               ))}
             </div>
@@ -168,11 +173,11 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
 
           {/* 岗位筛选 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">岗位</h3>
-            <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">岗位</h3>
+            <div className="space-y-2">
               {Object.entries(categories).map(([category, subcategories]) => (
                 <div key={category}>
-                  <label className="flex items-center mb-2">
+                  <label className="flex items-center mb-1 cursor-pointer">
                     <input
                       type="radio"
                       name="category"
@@ -184,15 +189,15 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                           updateFilters({ category, subcategory: null });
                         }
                       }}
-                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-900">{category}</span>
+                    <span className="ml-2 text-xs font-medium text-gray-900">{category}</span>
                   </label>
                   
                   {filters.category === category && (
-                    <div className="ml-6 space-y-1">
+                    <div className="ml-4 space-y-1">
                       {subcategories.map(subcategory => (
-                        <label key={subcategory} className="flex items-center">
+                        <label key={subcategory} className="flex items-center cursor-pointer">
                           <input
                             type="radio"
                             name="subcategory"
@@ -200,9 +205,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                             onChange={() => updateFilters({ 
                               subcategory: filters.subcategory === subcategory ? null : subcategory
                             })}
-                            className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                           />
-                          <span className="ml-2 text-sm text-gray-600">{subcategory}</span>
+                          <span className="ml-2 text-xs text-gray-600">{subcategory}</span>
                         </label>
                       ))}
                     </div>
@@ -214,20 +219,20 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
 
           {/* 公司筛选 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">公司</h3>
-            <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">公司</h3>
+            <div className="relative mb-2">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
               <input
                 type="text"
-                placeholder="搜索公司..."
+                placeholder="搜索..."
                 value={companySearch}
                 onChange={(e) => setCompanySearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full pl-7 pr-3 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs"
               />
             </div>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
+            <div className="space-y-1 max-h-32 overflow-y-auto">
               {filteredCompanies.map(company => (
-                <label key={company} className="flex items-center">
+                <label key={company} className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={filters.companies.includes(company)}
@@ -242,9 +247,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                         });
                       }
                     }}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{company}</span>
+                  <span className="ml-2 text-xs text-gray-700">{company}</span>
                 </label>
               ))}
             </div>
@@ -252,10 +257,10 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
 
           {/* 时间筛选 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">面经时间</h3>
-            <div className="space-y-2">
+            <h3 className="text-xs font-semibold text-gray-700 mb-2">时间</h3>
+            <div className="space-y-1">
               {timeRanges.map(range => (
-                <label key={range.value} className="flex items-center">
+                <label key={range.value} className="flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="timeRange"
@@ -263,9 +268,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                     onChange={() => updateFilters({ 
                       timeRange: filters.timeRange === range.value ? null : range.value as FilterState['timeRange']
                     })}
-                    className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-700">{range.label}</span>
+                  <span className="ml-2 text-xs text-gray-700">{range.label}</span>
                 </label>
               ))}
             </div>
