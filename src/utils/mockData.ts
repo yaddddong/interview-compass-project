@@ -26,6 +26,12 @@ const sampleQuestions = [
 const sources = ['xiaohongshu', 'zhihu', 'niuke'] as const;
 const types = ['campus', 'social'] as const;
 
+const sourceUrls = {
+  xiaohongshu: 'https://www.xiaohongshu.com',
+  zhihu: 'https://www.zhihu.com',
+  niuke: 'https://www.nowcoder.com'
+};
+
 // 生成1000道模拟题目
 export const mockInterviews: Interview[] = Array.from({ length: 1000 }, (_, index) => {
   const company = companies[Math.floor(Math.random() * companies.length)];
@@ -34,9 +40,16 @@ export const mockInterviews: Interview[] = Array.from({ length: 1000 }, (_, inde
     Math.floor(Math.random() * subcategories[category as keyof typeof subcategories].length)
   ];
   const type = types[Math.floor(Math.random() * types.length)];
-  const source = sources[Math.floor(Math.random() * sources.length)];
   const difficulty = Math.floor(Math.random() * 9) + 1;
   const question = sampleQuestions[Math.floor(Math.random() * sampleQuestions.length)];
+  
+  // 随机生成1-3个来源
+  const numSources = Math.floor(Math.random() * 3) + 1;
+  const shuffledSources = [...sources].sort(() => 0.5 - Math.random());
+  const selectedSources = shuffledSources.slice(0, numSources).map(platform => ({
+    platform,
+    url: sourceUrls[platform]
+  }));
   
   // 生成随机日期（最近两年内）
   const now = new Date();
@@ -46,13 +59,13 @@ export const mockInterviews: Interview[] = Array.from({ length: 1000 }, (_, inde
 
   return {
     id: `interview-${index + 1}`,
-    question: `${question} - ${company} ${subcategory}岗位`,
+    question: question,
     company,
     post: `${subcategory}工程师`,
     type,
     difficulty: difficulty as Interview['difficulty'],
     askedCount: Math.floor(Math.random() * 500) + 1,
-    source,
+    sources: selectedSources,
     date: date.toISOString(),
     category,
     subcategory

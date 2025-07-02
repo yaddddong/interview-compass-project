@@ -19,11 +19,11 @@ const InterviewCard = ({ interview, onAIAnalysis }: InterviewCardProps) => {
 
   const getSourceColor = (source: string) => {
     const colorMap = {
-      xiaohongshu: 'text-pink-600 bg-pink-50',
-      zhihu: 'text-blue-600 bg-blue-50',
-      niuke: 'text-green-600 bg-green-50'
+      xiaohongshu: 'text-pink-600 bg-pink-50 hover:bg-pink-100',
+      zhihu: 'text-blue-600 bg-blue-50 hover:bg-blue-100',
+      niuke: 'text-green-600 bg-green-50 hover:bg-green-100'
     };
-    return colorMap[source as keyof typeof colorMap] || 'text-gray-600 bg-gray-50';
+    return colorMap[source as keyof typeof colorMap] || 'text-gray-600 bg-gray-50 hover:bg-gray-100';
   };
 
   const getDifficultyColor = (difficulty: number) => {
@@ -72,10 +72,22 @@ const InterviewCard = ({ interview, onAIAnalysis }: InterviewCardProps) => {
 
       {/* 底部信息和操作 */}
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <span className={`px-2 py-1 rounded text-xs font-medium ${getSourceColor(interview.source)}`}>
-            来源：{getSourceLabel(interview.source)}
-          </span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <span className="text-xs text-gray-500 mr-1">来源：</span>
+            {interview.sources.map((source, index) => (
+              <button
+                key={source.platform}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(source.url, '_blank');
+                }}
+                className={`px-2 py-1 rounded text-xs font-medium cursor-pointer transition-colors ${getSourceColor(source.platform)}`}
+              >
+                {getSourceLabel(source.platform)}
+              </button>
+            ))}
+          </div>
           <span className="text-xs text-gray-500">
             {new Date(interview.date).toLocaleDateString('zh-CN')}
           </span>
