@@ -72,7 +72,7 @@ const InterviewCard = ({ interview, onAIAnalysis }: InterviewCardProps) => {
 
       {/* 底部信息和操作 */}
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
             <span className="text-xs text-gray-500 mr-1">来源：</span>
             {interview.sources.map((source, index) => (
@@ -88,9 +88,16 @@ const InterviewCard = ({ interview, onAIAnalysis }: InterviewCardProps) => {
               </button>
             ))}
           </div>
-          <span className="text-xs text-gray-500">
-            {new Date(interview.date).toLocaleDateString('zh-CN')}
-          </span>
+          {/* 显示时间范围或具体时间 */}
+          <div className="text-xs text-gray-500">
+            {interview.sources.length > 1 ? (
+              <span className="px-2 py-1 bg-gray-50 rounded-md border">
+                多个时间点
+              </span>
+            ) : (
+              new Date(interview.date).toLocaleDateString('zh-CN')
+            )}
+          </div>
         </div>
         
         <button

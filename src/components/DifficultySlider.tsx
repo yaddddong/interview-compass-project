@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Interview } from '@/types/interview';
 import { Slider } from '@/components/ui/slider';
+import { BarChart3 } from 'lucide-react';
 
 interface DifficultySliderProps {
   interviews: Interview[];
@@ -66,19 +67,22 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
 
   return (
     <div className="bg-white/80 backdrop-blur-lg rounded-xl p-4 shadow-sm border border-gray-100/50">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500" />
-          <h3 className="text-sm font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-            难度热力图
+      {/* 难度标签和重置按钮 */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 bg-gradient-to-br from-primary/20 to-primary/10 rounded-md flex items-center justify-center">
+            <BarChart3 className="w-3.5 h-3.5 text-primary" />
+          </div>
+          <h3 className="text-base font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            难度分布
           </h3>
         </div>
         {selectedDifficulty && (
           <button
-            onClick={clearDifficulty}
-            className="px-2 py-1 text-xs bg-gradient-to-r from-gray-100 to-gray-50 hover:from-gray-200 hover:to-gray-100 rounded-md transition-all duration-300 border border-gray-200 shadow-sm hover:shadow-md transform hover:scale-105"
+            onClick={() => onDifficultySelect(null)}
+            className="px-3 py-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-all duration-200 rounded-lg hover:bg-primary/10 border border-primary/20 hover:border-primary/30"
           >
-            重置
+            查看全部
           </button>
         )}
       </div>

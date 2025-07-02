@@ -74,21 +74,21 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
 
   return (
     <div className={`bg-gradient-to-b from-white/95 to-white/80 backdrop-blur-lg border-r border-white/20 shadow-sm ${className}`}>
-      <div className="p-6">
+      <div className="p-4">
         {/* 标题 */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary/20 to-primary/10 rounded-lg flex items-center justify-center">
-              <Filter className="w-4 h-4 text-primary" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-primary/20 to-primary/10 rounded-md flex items-center justify-center">
+              <Filter className="w-3.5 h-3.5 text-primary" />
             </div>
-            <h2 className="text-lg font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <h2 className="text-base font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               筛选器
             </h2>
           </div>
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
-              className="text-xs text-primary hover:text-primary/80 transition-all duration-200 px-3 py-1.5 rounded-lg hover:bg-primary/10 font-medium"
+              className="text-xs text-primary hover:text-primary/80 transition-all duration-200 px-2 py-1 rounded-md hover:bg-primary/10 font-medium"
             >
               清空
             </button>
@@ -97,49 +97,49 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
 
         {/* 已选标签 */}
         {hasActiveFilters && (
-          <div className="mb-6 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/30">
-            <div className="flex flex-wrap gap-2">
+          <div className="mb-4 p-3 bg-white/60 backdrop-blur-sm rounded-lg border border-white/30">
+            <div className="flex flex-wrap gap-1.5">
               {filters.type && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500/10 to-blue-600/10 text-blue-700 rounded-lg text-xs font-medium border border-blue-200/50">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-500/10 to-blue-600/10 text-blue-700 rounded-md text-xs font-medium border border-blue-200/50">
                   {filters.type === 'campus' ? '校招' : '社招'}
                   <X 
-                    className="w-3.5 h-3.5 cursor-pointer hover:text-blue-900 transition-colors" 
+                    className="w-3 h-3 cursor-pointer hover:text-blue-900 transition-colors" 
                     onClick={() => removeFilter('type')}
                   />
                 </span>
               )}
               {filters.category && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-green-500/10 to-green-600/10 text-green-700 rounded-lg text-xs font-medium border border-green-200/50">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-green-500/10 to-green-600/10 text-green-700 rounded-md text-xs font-medium border border-green-200/50">
                   {filters.category}
                   <X 
-                    className="w-3.5 h-3.5 cursor-pointer hover:text-green-900 transition-colors" 
+                    className="w-3 h-3 cursor-pointer hover:text-green-900 transition-colors" 
                     onClick={() => removeFilter('category')}
                   />
                 </span>
               )}
               {filters.subcategory && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-700 rounded-lg text-xs font-medium border border-purple-200/50">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-700 rounded-md text-xs font-medium border border-purple-200/50">
                   {filters.subcategory}
                   <X 
-                    className="w-3.5 h-3.5 cursor-pointer hover:text-purple-900 transition-colors" 
+                    className="w-3 h-3 cursor-pointer hover:text-purple-900 transition-colors" 
                     onClick={() => removeFilter('subcategory')}
                   />
                 </span>
               )}
               {filters.companies.map(company => (
-                <span key={company} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-500/10 to-orange-600/10 text-orange-700 rounded-lg text-xs font-medium border border-orange-200/50">
+                <span key={company} className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-orange-500/10 to-orange-600/10 text-orange-700 rounded-md text-xs font-medium border border-orange-200/50">
                   {company}
                   <X 
-                    className="w-3.5 h-3.5 cursor-pointer hover:text-orange-900 transition-colors" 
+                    className="w-3 h-3 cursor-pointer hover:text-orange-900 transition-colors" 
                     onClick={() => removeFilter('company', company)}
                   />
                 </span>
               ))}
               {filters.timeRange && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-gray-500/10 to-gray-600/10 text-gray-700 rounded-lg text-xs font-medium border border-gray-200/50">
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-gray-500/10 to-gray-600/10 text-gray-700 rounded-md text-xs font-medium border border-gray-200/50">
                   {timeRanges.find(t => t.value === filters.timeRange)?.label}
                   <X 
-                    className="w-3.5 h-3.5 cursor-pointer hover:text-gray-900 transition-colors" 
+                    className="w-3 h-3 cursor-pointer hover:text-gray-900 transition-colors" 
                     onClick={() => removeFilter('timeRange')}
                   />
                 </span>
@@ -148,14 +148,14 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
           </div>
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* 类型筛选 */}
-          <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-            <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
+          <div className="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+            <h3 className="text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
               类型
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {[
                 { value: 'campus', label: '校招' },
                 { value: 'social', label: '社招' }
@@ -168,24 +168,24 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                     onChange={() => updateFilters({ 
                       type: filters.type === type.value ? null : type.value as 'campus' | 'social'
                     })}
-                    className="w-4 h-4 text-primary border-border focus:ring-primary/30 focus:ring-2"
+                    className="w-3.5 h-3.5 text-primary border-border focus:ring-primary/30 focus:ring-1"
                   />
-                  <span className="ml-3 text-sm text-foreground group-hover:text-primary transition-colors">{type.label}</span>
+                  <span className="ml-2.5 text-sm text-foreground group-hover:text-primary transition-colors">{type.label}</span>
                 </label>
               ))}
             </div>
           </div>
 
           {/* 岗位筛选 */}
-          <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-            <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
+          <div className="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+            <h3 className="text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
               岗位
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {Object.entries(categories).map(([category, subcategories]) => (
                 <div key={category}>
-                  <label className="flex items-center mb-2 cursor-pointer group">
+                  <label className="flex items-center mb-1 cursor-pointer group">
                     <input
                       type="radio"
                       name="category"
@@ -197,13 +197,13 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                           updateFilters({ category, subcategory: null });
                         }
                       }}
-                      className="w-4 h-4 text-primary border-border focus:ring-primary/30 focus:ring-2"
+                      className="w-3.5 h-3.5 text-primary border-border focus:ring-primary/30 focus:ring-1"
                     />
-                    <span className="ml-3 text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{category}</span>
+                    <span className="ml-2.5 text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{category}</span>
                   </label>
                   
                   {filters.category === category && (
-                    <div className="ml-6 space-y-2 animate-fade-in">
+                    <div className="ml-5 space-y-1 animate-fade-in">
                       {subcategories.map(subcategory => (
                         <label key={subcategory} className="flex items-center cursor-pointer group">
                           <input
@@ -213,9 +213,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                             onChange={() => updateFilters({ 
                               subcategory: filters.subcategory === subcategory ? null : subcategory
                             })}
-                            className="w-3.5 h-3.5 text-primary border-border focus:ring-primary/30 focus:ring-2"
+                            className="w-3 h-3 text-primary border-border focus:ring-primary/30 focus:ring-1"
                           />
-                          <span className="ml-3 text-sm text-muted-foreground group-hover:text-foreground transition-colors">{subcategory}</span>
+                          <span className="ml-2.5 text-sm text-muted-foreground group-hover:text-foreground transition-colors">{subcategory}</span>
                         </label>
                       ))}
                     </div>
@@ -226,12 +226,12 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
           </div>
 
           {/* 公司筛选 */}
-          <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-            <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
+          <div className="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+            <h3 className="text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
               公司
             </h3>
-            <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+            <div className="space-y-1.5 max-h-32 overflow-y-auto custom-scrollbar">
               {companies.map(company => (
                 <label key={company} className="flex items-center cursor-pointer group">
                   <input
@@ -248,21 +248,21 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                         });
                       }
                     }}
-                    className="w-4 h-4 text-primary border-border rounded focus:ring-primary/30 focus:ring-2"
+                    className="w-3.5 h-3.5 text-primary border-border rounded focus:ring-primary/30 focus:ring-1"
                   />
-                  <span className="ml-3 text-sm text-foreground group-hover:text-primary transition-colors">{company}</span>
+                  <span className="ml-2.5 text-sm text-foreground group-hover:text-primary transition-colors">{company}</span>
                 </label>
               ))}
             </div>
           </div>
 
           {/* 时间筛选 */}
-          <div className="bg-white/40 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-            <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
+          <div className="bg-white/40 backdrop-blur-sm rounded-lg p-3 border border-white/30">
+            <h3 className="text-sm font-bold text-foreground mb-2 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
               时间
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {timeRanges.map(range => (
                 <label key={range.value} className="flex items-center cursor-pointer group">
                   <input
@@ -272,9 +272,9 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
                     onChange={() => updateFilters({ 
                       timeRange: filters.timeRange === range.value ? null : range.value as FilterState['timeRange']
                     })}
-                    className="w-4 h-4 text-primary border-border focus:ring-primary/30 focus:ring-2"
+                    className="w-3.5 h-3.5 text-primary border-border focus:ring-primary/30 focus:ring-1"
                   />
-                  <span className="ml-3 text-sm text-foreground group-hover:text-primary transition-colors">{range.label}</span>
+                  <span className="ml-2.5 text-sm text-foreground group-hover:text-primary transition-colors">{range.label}</span>
                 </label>
               ))}
             </div>
