@@ -25,11 +25,11 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
   );
 
   const timeRanges = [
-    { value: 'two_weeks', label: '2周' },
-    { value: 'one_month', label: '1月' },
-    { value: 'half_year', label: '半年' },
-    { value: 'one_year', label: '1年' },
-    { value: 'two_years', label: '2年' }
+    { value: 'two_weeks', label: '最近两周' },
+    { value: 'one_month', label: '最近一个月' },
+    { value: 'half_year', label: '最近半年' },
+    { value: 'one_year', label: '最近一年' },
+    { value: 'two_years', label: '最近两年' }
   ];
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
@@ -220,18 +220,8 @@ const FilterSidebar = ({ filters, onFiltersChange, className = '' }: FilterSideb
           {/* 公司筛选 */}
           <div>
             <h3 className="text-xs font-semibold text-gray-700 mb-2">公司</h3>
-            <div className="relative mb-2">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="搜索..."
-                value={companySearch}
-                onChange={(e) => setCompanySearch(e.target.value)}
-                className="w-full pl-7 pr-3 py-1.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-transparent text-xs"
-              />
-            </div>
             <div className="space-y-1 max-h-32 overflow-y-auto">
-              {filteredCompanies.map(company => (
+              {companies.map(company => (
                 <label key={company} className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
