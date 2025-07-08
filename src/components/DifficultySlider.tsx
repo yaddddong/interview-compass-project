@@ -89,12 +89,12 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
       
       {/* 平滑曲线分布图 */}
       <div className="mb-4">
-        <div className="relative h-16 mb-2 px-1 overflow-hidden">
+        <div className="relative h-20 mb-2 px-1 overflow-hidden">
           {/* 动态背景光效 */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent opacity-60" />
           
           {/* SVG曲线图 */}
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 64">
+          <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
             <defs>
               <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.6"/>
@@ -111,10 +111,10 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
             {/* 生成平滑曲线路径 */}
             {maxCount > 0 && (() => {
               const points = Array.from({ length: 9 }, (_, i) => {
-                const x = (i / 8) * 100;
+                const x = (i / 8) * 95 + 2.5; // 留出边距
                 const count = difficultyData[i + 1] || 0;
-                const y = 60 - (count / maxCount) * 50;
-                return { x, y, count };
+                const y = 75 - (count / maxCount) * 60; // 增加高度范围
+                return { x, y, count, difficulty: i + 1 };
               });
               
               // 创建平滑曲线
@@ -126,17 +126,21 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
                 for (let i = 1; i < points.length; i++) {
                   const prev = points[i - 1];
                   const curr = points[i];
+                  const next = points[i + 1];
                   
-                  // 使用二次贝塞尔曲线创建平滑效果
-                  const cpx = (prev.x + curr.x) / 2;
-                  path += ` Q ${cpx} ${prev.y} ${curr.x} ${curr.y}`;
+                  // 使用三次贝塞尔曲线创建更平滑的效果
+                  const tension = 0.3;
+                  const cp1x = prev.x + (curr.x - prev.x) * tension;
+                  const cp2x = curr.x - (next ? (next.x - prev.x) : (curr.x - prev.x)) * tension;
+                  
+                  path += ` C ${cp1x} ${prev.y} ${cp2x} ${curr.y} ${curr.x} ${curr.y}`;
                 }
                 
                 return path;
               };
               
               const smoothPath = createSmoothPath(points);
-              const areaPath = smoothPath + ` L 100 60 L 0 60 Z`;
+              const areaPath = smoothPath + ` L 97.5 75 L 2.5 75 Z`;
               
               return (
                 <>
@@ -151,33 +155,42 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
                     d={smoothPath}
                     fill="none"
                     stroke="url(#strokeGradient)"
-                    strokeWidth="2"
+                    strokeWidth="3"
                     className="transition-all duration-700 drop-shadow-sm"
                   />
                   {/* 数据点 */}
                   {points.map((point, i) => {
-                    const isSelected = selectedDifficulty === i + 1;
+                    const isSelected = selectedDifficulty === point.difficulty;
                     return (
                       <g key={i}>
+                        {/* 点击区域 */}
                         <circle
                           cx={point.x}
                           cy={point.y}
-                          r={isSelected ? "3" : "2"}
+                          r="8"
+                          fill="transparent"
+                          className="cursor-pointer"
+                          onClick={() => onDifficultySelect(selectedDifficulty === point.difficulty ? null : point.difficulty)}
+                        />
+                        {/* 可视化圆点 */}
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r={isSelected ? "4" : "3"}
                           fill={isSelected ? "#8B5CF6" : "#FFFFFF"}
                           stroke={isSelected ? "#FFFFFF" : "#8B5CF6"}
                           strokeWidth="2"
-                          className="transition-all duration-300 drop-shadow-md cursor-pointer"
-                          onClick={() => onDifficultySelect(selectedDifficulty === i + 1 ? null : i + 1)}
+                          className="transition-all duration-300 drop-shadow-md pointer-events-none"
                         />
                         {/* 数量标签 */}
                         <text
                           x={point.x}
-                          y={point.y - 8}
+                          y={point.y - 12}
                           textAnchor="middle"
-                          className={`text-xs font-bold transition-all duration-300 ${
+                          className={`text-xs font-bold transition-all duration-300 pointer-events-none ${
                             isSelected ? 'fill-purple-600' : 'fill-gray-500'
                           }`}
-                          style={{ fontSize: '8px' }}
+                          fontSize="10"
                         >
                           {point.count}
                         </text>
