@@ -87,55 +87,107 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
         )}
       </div>
       
-      {/* 炫酷的分布图 - 采用密集的圆点设计 */}
+      {/* 平滑曲线分布图 */}
       <div className="mb-4">
-        <div className="flex justify-between items-end h-16 mb-2 px-1 relative overflow-hidden">
+        <div className="relative h-16 mb-2 px-1 overflow-hidden">
           {/* 动态背景光效 */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent opacity-60" />
           
-          {/* 网格背景 */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="grid grid-cols-9 h-full gap-1">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="border-r border-dashed border-gray-300 last:border-r-0" />
-              ))}
-            </div>
-          </div>
-          
-          {Array.from({ length: 9 }, (_, i) => i + 1).map((difficulty) => {
-            const isSelected = selectedDifficulty === difficulty;
-            const count = difficultyData[difficulty] || 0;
-            const height = Math.max((count / maxCount) * 50, 4);
+          {/* SVG曲线图 */}
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 64">
+            <defs>
+              <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.6"/>
+                <stop offset="50%" stopColor="#3B82F6" stopOpacity="0.4"/>
+                <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.2"/>
+              </linearGradient>
+              <linearGradient id="strokeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#10B981"/>
+                <stop offset="50%" stopColor="#F59E0B"/>
+                <stop offset="100%" stopColor="#EF4444"/>
+              </linearGradient>
+            </defs>
             
-            return (
-              <div key={difficulty} className="flex flex-col items-center flex-1 group relative z-10">
-                {/* 数量显示 */}
-                <div className={`text-xs font-bold mb-1 transition-all duration-300 ${
-                  isSelected ? 'text-purple-600 scale-110' : 'text-gray-500'
-                }`}>
-                  {count}
-                </div>
+            {/* 生成平滑曲线路径 */}
+            {maxCount > 0 && (() => {
+              const points = Array.from({ length: 9 }, (_, i) => {
+                const x = (i / 8) * 100;
+                const count = difficultyData[i + 1] || 0;
+                const y = 60 - (count / maxCount) * 50;
+                return { x, y, count };
+              });
+              
+              // 创建平滑曲线
+              const createSmoothPath = (points: {x: number, y: number}[]) => {
+                if (points.length < 2) return '';
                 
-                {/* 立体柱状图 */}
-                <div className="relative">
-                  <div
-                    className={`w-6 mx-auto rounded-lg transition-all duration-700 ease-out transform group-hover:scale-110 border-2 relative overflow-hidden ${
-                      getBarGradient(difficulty, isSelected)
-                    }`}
-                    style={{ height: `${height}px` }}
-                  >
-                    {/* 内部高光效果 */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/10" />
-                    {/* 顶部光泽 */}
-                    <div className="absolute top-0 inset-x-0 h-1 bg-white/40 rounded-t-lg" />
-                  </div>
+                let path = `M ${points[0].x} ${points[0].y}`;
+                
+                for (let i = 1; i < points.length; i++) {
+                  const prev = points[i - 1];
+                  const curr = points[i];
                   
-                  {/* 底部阴影 */}
-                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-5 h-1 bg-gray-300/20 rounded-full blur-sm" />
-                </div>
-              </div>
-            );
-          })}
+                  // 使用二次贝塞尔曲线创建平滑效果
+                  const cpx = (prev.x + curr.x) / 2;
+                  path += ` Q ${cpx} ${prev.y} ${curr.x} ${curr.y}`;
+                }
+                
+                return path;
+              };
+              
+              const smoothPath = createSmoothPath(points);
+              const areaPath = smoothPath + ` L 100 60 L 0 60 Z`;
+              
+              return (
+                <>
+                  {/* 填充区域 */}
+                  <path
+                    d={areaPath}
+                    fill="url(#curveGradient)"
+                    className="transition-all duration-700"
+                  />
+                  {/* 曲线描边 */}
+                  <path
+                    d={smoothPath}
+                    fill="none"
+                    stroke="url(#strokeGradient)"
+                    strokeWidth="2"
+                    className="transition-all duration-700 drop-shadow-sm"
+                  />
+                  {/* 数据点 */}
+                  {points.map((point, i) => {
+                    const isSelected = selectedDifficulty === i + 1;
+                    return (
+                      <g key={i}>
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r={isSelected ? "3" : "2"}
+                          fill={isSelected ? "#8B5CF6" : "#FFFFFF"}
+                          stroke={isSelected ? "#FFFFFF" : "#8B5CF6"}
+                          strokeWidth="2"
+                          className="transition-all duration-300 drop-shadow-md cursor-pointer"
+                          onClick={() => onDifficultySelect(selectedDifficulty === i + 1 ? null : i + 1)}
+                        />
+                        {/* 数量标签 */}
+                        <text
+                          x={point.x}
+                          y={point.y - 8}
+                          textAnchor="middle"
+                          className={`text-xs font-bold transition-all duration-300 ${
+                            isSelected ? 'fill-purple-600' : 'fill-gray-500'
+                          }`}
+                          style={{ fontSize: '8px' }}
+                        >
+                          {point.count}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </>
+              );
+            })()}
+          </svg>
         </div>
         
         {/* 图标标签行 - 更密集紧凑 */}

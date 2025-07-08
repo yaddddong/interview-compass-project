@@ -88,15 +88,11 @@ const InterviewCard = ({ interview, onAIAnalysis }: InterviewCardProps) => {
               </button>
             ))}
           </div>
-          {/* 显示时间范围或具体时间 */}
+          {/* 显示时间 */}
           <div className="text-xs text-gray-500">
-            {interview.sources.length > 1 ? (
-              <span className="px-2 py-1 bg-gray-50 rounded-md border">
-                多个时间点
-              </span>
-            ) : (
-              new Date(interview.date).toLocaleDateString('zh-CN')
-            )}
+            <span className="px-2 py-1 bg-gray-50 rounded-md border">
+              {new Date(interview.date).toLocaleDateString('zh-CN')}
+            </span>
           </div>
         </div>
         
