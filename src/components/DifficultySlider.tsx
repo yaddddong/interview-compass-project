@@ -94,7 +94,7 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-50/30 to-transparent opacity-60" />
           
           {/* SVG曲线图 */}
-          <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 360 80" preserveAspectRatio="none">
             <defs>
               <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.6"/>
@@ -111,36 +111,32 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
             {/* 生成平滑曲线路径 */}
             {maxCount > 0 && (() => {
               const points = Array.from({ length: 9 }, (_, i) => {
-                const x = (i / 8) * 95 + 2.5; // 留出边距
+                const x = 20 + (i * 40); // 固定间距分布
                 const count = difficultyData[i + 1] || 0;
-                const y = 75 - (count / maxCount) * 60; // 增加高度范围
+                const y = 70 - (count / maxCount) * 50; // 从底部向上计算
                 return { x, y, count, difficulty: i + 1 };
               });
               
-              // 创建平滑曲线
+              // 创建平滑曲线 - 简化版本
               const createSmoothPath = (points: {x: number, y: number}[]) => {
                 if (points.length < 2) return '';
                 
-                let path = `M ${points[0].x} ${points[0].y}`;
+                let path = `M ${points[0].x},${points[0].y}`;
                 
                 for (let i = 1; i < points.length; i++) {
-                  const prev = points[i - 1];
                   const curr = points[i];
-                  const next = points[i + 1];
+                  const prev = points[i - 1];
                   
-                  // 使用三次贝塞尔曲线创建更平滑的效果
-                  const tension = 0.3;
-                  const cp1x = prev.x + (curr.x - prev.x) * tension;
-                  const cp2x = curr.x - (next ? (next.x - prev.x) : (curr.x - prev.x)) * tension;
-                  
-                  path += ` C ${cp1x} ${prev.y} ${cp2x} ${curr.y} ${curr.x} ${curr.y}`;
+                  // 简单的二次贝塞尔曲线
+                  const midX = (prev.x + curr.x) / 2;
+                  path += ` Q ${midX},${prev.y} ${curr.x},${curr.y}`;
                 }
                 
                 return path;
               };
               
               const smoothPath = createSmoothPath(points);
-              const areaPath = smoothPath + ` L 97.5 75 L 2.5 75 Z`;
+              const areaPath = smoothPath + ` L 340,70 L 20,70 Z`;
               
               return (
                 <>
@@ -167,7 +163,7 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
                         <circle
                           cx={point.x}
                           cy={point.y}
-                          r="8"
+                          r="12"
                           fill="transparent"
                           className="cursor-pointer"
                           onClick={() => onDifficultySelect(selectedDifficulty === point.difficulty ? null : point.difficulty)}
@@ -185,12 +181,12 @@ const DifficultySlider = ({ interviews, selectedDifficulty, onDifficultySelect }
                         {/* 数量标签 */}
                         <text
                           x={point.x}
-                          y={point.y - 12}
+                          y={point.y - 8}
                           textAnchor="middle"
                           className={`text-xs font-bold transition-all duration-300 pointer-events-none ${
                             isSelected ? 'fill-purple-600' : 'fill-gray-500'
                           }`}
-                          fontSize="10"
+                          fontSize="12"
                         >
                           {point.count}
                         </text>
