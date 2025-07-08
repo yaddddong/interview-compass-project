@@ -24,7 +24,8 @@ const Index = () => {
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null);
   const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
 
-  const filteredInterviews = useMemo(() => {
+  // 计算排除难度筛选的其他筛选结果（用于难度分布图）
+  const interviewsForDifficultyChart = useMemo(() => {
     let result = mockInterviews;
 
     // 类型过滤
@@ -61,13 +62,20 @@ const Index = () => {
       );
     }
 
+    // 注意：这里不包含难度过滤
+    return result;
+  }, [filters.type, filters.category, filters.subcategory, filters.companies, filters.timeRange]);
+
+  const filteredInterviews = useMemo(() => {
+    let result = interviewsForDifficultyChart;
+
     // 难度过滤
     if (filters.difficulty) {
       result = result.filter(interview => interview.difficulty === filters.difficulty);
     }
 
     return result;
-  }, [filters]);
+  }, [interviewsForDifficultyChart, filters.difficulty]);
 
   const handleAIAnalysis = (interview: Interview) => {
     setSelectedInterview(interview);
@@ -127,7 +135,7 @@ const Index = () => {
           {/* 紧凑的难度滑动轴 */}
           <div className="mb-6">
             <DifficultySlider
-              interviews={mockInterviews}
+              interviews={interviewsForDifficultyChart}
               selectedDifficulty={filters.difficulty}
               onDifficultySelect={handleDifficultySelect}
             />
