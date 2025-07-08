@@ -127,7 +127,7 @@ const Index = () => {
           {/* 紧凑的难度滑动轴 */}
           <div className="mb-6">
             <DifficultySlider
-              interviews={filteredInterviews}
+              interviews={mockInterviews}
               selectedDifficulty={filters.difficulty}
               onDifficultySelect={handleDifficultySelect}
             />
